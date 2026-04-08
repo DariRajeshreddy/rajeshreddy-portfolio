@@ -82,10 +82,10 @@ export function About() {
       <div className="mx-auto flex max-w-5xl flex-col items-center space-y-10 text-center sm:space-y-14">
         {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+           initial={{ opacity: 0, y: 16 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-[10px] font-black uppercase tracking-[0.65em] text-violet-400/80">
             About
