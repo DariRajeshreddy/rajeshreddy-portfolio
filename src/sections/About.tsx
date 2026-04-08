@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,13 +12,13 @@ const highlights = [
     icon: Code2,
     color: '#6366f1',
     label: 'Clean Code',
-    desc: 'Structured, typed, and maintainable',
+    desc: 'Structured, typed, & maintainable',
   },
   {
     icon: Zap,
     color: '#f59e0b',
     label: 'Performance',
-    desc: 'Optimized renders & fast load times',
+    desc: 'Optimized renders & fast load',
   },
   {
     icon: Globe,
@@ -47,9 +47,7 @@ const itemVariants = {
 };
 
 export function About() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: '-80px' });
 
   useLayoutEffect(() => {
     const el = statsRef.current;
@@ -75,7 +73,6 @@ export function About() {
   return (
     <section
       id="about"
-      ref={containerRef}
       className="relative z-10 px-4 py-24 sm:px-6 sm:py-32"
     >
       {/* Background accents */}
@@ -85,9 +82,10 @@ export function About() {
       <div className="mx-auto flex max-w-5xl flex-col items-center space-y-10 text-center sm:space-y-14">
         {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+           initial={{ opacity: 0, y: 16 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="text-[10px] font-black uppercase tracking-[0.65em] text-violet-400/80">
             About
@@ -97,14 +95,16 @@ export function About() {
         {/* Main bio card */}
         <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.97 }}
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           className="group relative w-full rounded-2xl bg-gradient-to-br from-primary/40 via-violet-500/30 to-sky-500/25 p-[1px] transition-transform duration-500 md:rounded-3xl md:hover:scale-[1.01]"
         >
           <div className="rounded-[18px] border border-white/10 bg-slate-950/70 p-6 backdrop-blur-2xl sm:rounded-[22px] sm:p-10 md:p-14">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.65, delay: 0.2 }}
               className="mb-6 font-display text-3xl font-black leading-tight tracking-tighter text-white sm:mb-8 sm:text-4xl md:text-6xl"
             >
@@ -113,9 +113,10 @@ export function About() {
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.65, delay: 0.3 }}
-              className="mx-auto max-w-3xl text-base font-light leading-relaxed text-slate-300 sm:text-lg md:text-xl"
+              className="mx-auto max-w-3xl text-sm font-light leading-relaxed text-slate-300 sm:text-lg md:text-xl"
             >
               I am <span className="font-semibold text-white">Rajesh Reddy</span>, a frontend
               developer focused on polished UX, design systems, and high-performance interfaces. I
@@ -124,24 +125,27 @@ export function About() {
               recruiters, users, and clients love.
             </motion.p>
 
-            {/* Highlight pills */}
+            {/* Highlight pills - Grid Optimized for Mobile Alignment */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
-              className="mt-8 flex flex-wrap justify-center gap-3"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-4"
             >
               {highlights.map((h) => (
                 <motion.div
                   key={h.label}
                   variants={itemVariants}
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-md"
+                  className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md hover:bg-white/8 transition-colors"
                 >
-                  <h.icon size={16} style={{ color: h.color }} />
+                  <div className="shrink-0">
+                    <h.icon size={20} style={{ color: h.color }} />
+                  </div>
                   <div className="text-left">
                     <p className="text-sm font-bold text-white">{h.label}</p>
-                    <p className="text-[10px] text-slate-500">{h.desc}</p>
+                    <p className="text-[10px] leading-tight text-slate-500">{h.desc}</p>
                   </div>
                 </motion.div>
               ))}

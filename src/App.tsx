@@ -88,11 +88,11 @@ function App() {
         {/* Floating Scroll to Top - for mobile convenience */}
         <motion.button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 backdrop-blur-xl border border-primary/30 text-white md:hidden lg:hidden"
-          style={{ opacity: scrollYProgress }}
+          className="fixed bottom-4 right-4 z-[99] flex h-10 w-10 items-center justify-center rounded-full bg-slate-900/60 backdrop-blur-xl border border-white/10 text-white shadow-2xl md:hidden lg:hidden"
+          style={{ opacity: scrollYProgress, scale: scrollYProgress }}
           whileTap={{ scale: 0.9 }}
         >
-          <ArrowUp size={20} />
+          <ArrowUp size={16} />
         </motion.button>
       </div>
     </SmoothScroll>

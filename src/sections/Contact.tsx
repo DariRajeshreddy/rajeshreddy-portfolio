@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, type Variants, useInView } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { Mail, Phone, Send, CheckCircle } from 'lucide-react';
 import {
   GitHubDark as Github,
@@ -7,7 +7,7 @@ import {
 } from '@ridemountainpig/svgl-react';
 import { fadeUpItem, fadeUpSimple, staggerContainer } from '../animations/variants';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 const socialLinks = [
   { icon: <Github width={22} height={22} />, label: 'GitHub', link: 'https://github.com/DariRajeshreddy', color: '#e6edf3' },
@@ -33,42 +33,47 @@ export function Contact() {
   const finePointer = useMediaQuery('(pointer: fine)');
   const fadeVariant = reduceMotion ? fadeUpSimple : fadeUpItem;
   const containerVariant = reduceMotion ? reduceStagger : staggerContainer;
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-60px' });
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
 
   return (
     <section
       id="contact"
-      ref={sectionRef}
-      className="relative z-10 overflow-hidden px-4 py-20 sm:px-6 sm:py-28"
+      className="relative z-10 px-4 py-20 sm:px-6 sm:py-28"
     >
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_100%,rgba(99,102,241,0.1),transparent_60%)]" />
 
       <div className="mx-auto max-w-6xl">
         {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center sm:mb-16"
-        >
-          <span className="mb-3 block text-[10px] font-black uppercase tracking-[0.65em] text-primary/80">
+        <div className="mb-12 text-center sm:mb-16">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-3 block text-[10px] font-black uppercase tracking-[0.65em] text-primary/80"
+          >
             Contact
-          </span>
-          <h2 className="font-display text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-7xl">
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            className="font-display text-4xl font-extrabold tracking-tighter text-white sm:text-5xl md:text-7xl"
+          >
             LET&apos;S <span className="text-glow text-primary">CONNECT</span>
-          </h2>
-        </motion.div>
+          </motion.h2>
+        </div>
 
         <div className="grid items-start gap-10 sm:gap-16 md:grid-cols-2">
           {/* Left - contact info */}
           <motion.div
             variants={containerVariant}
             initial="hidden"
-            animate={isInView ? 'show' : 'hidden'}
+            whileInView="show"
+            viewport={{ once: true }}
             className="space-y-8 sm:space-y-10"
           >
             <motion.div variants={fadeVariant}>
@@ -120,7 +125,7 @@ export function Contact() {
               <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                 Find me on
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 {socialLinks.map((s) => (
                   <motion.a
                     key={s.label}
@@ -130,11 +135,11 @@ export function Contact() {
                     data-cursor-hover
                     whileHover={
                       finePointer && !reduceMotion
-                        ? { scale: 1.1, y: -3 }
+                        ? { scale: 1.05, y: -3 }
                         : undefined
                     }
                     whileTap={{ scale: 0.95 }}
-                    className="group flex items-center gap-2.5 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.08]"
+                    className="group flex items-center justify-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.08] sm:justify-start"
                   >
                     {s.icon}
                     <span className="text-sm font-semibold text-white">{s.label}</span>
@@ -147,7 +152,8 @@ export function Contact() {
           {/* Right - contact form */}
           <motion.div
             initial={{ opacity: 0, x: reduceMotion ? 0 : 28 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
             transition={{
               duration: reduceMotion ? 0.3 : 0.65,
               ease: [0.22, 1, 0.36, 1],

@@ -125,12 +125,13 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
       </div>
 
       {/* Info Section */}
-      <div className="flex flex-1 flex-col justify-center py-2 sm:py-4">
-        <div className="flex items-start justify-between">
+      <div className="flex flex-1 flex-col py-2 sm:py-4">
+        {/* Header - Fixed Alignment for mobile */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <h3 className="font-display text-2xl font-black tracking-tighter text-white sm:text-3xl md:text-4xl">
             {project.title}
           </h3>
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             <motion.a
               href={project.github}
               target="_blank"
@@ -154,10 +155,10 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
           {project.description}
         </p>
 
-        {/* Features Hidden on Mobile or in simple list */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        {/* Features - Single column on mobile, double on sm */}
+        <div className="grid grid-cols-1 gap-y-2 sm:grid-cols-2 sm:gap-x-4">
           {project.features.map((f) => (
-            <div key={f} className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+            <div key={f} className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500">
               <ChevronRight size={12} style={{ color: project.accent }} />
               {f}
             </div>

@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import {
   CSS,
@@ -115,10 +115,6 @@ function TechCard({ tech }: { tech: TechEntry }) {
 
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const titleInView = useInView(titleRef, { once: true, margin: '-60px' });
-  const gridInView = useInView(gridRef, { once: true, margin: '-60px' });
 
   return (
     <section
@@ -138,10 +134,11 @@ export function Skills() {
 
       <div className="mx-auto max-w-6xl">
         {/* Title */}
-        <div ref={titleRef} className="mb-12 text-center sm:mb-16">
+        <div className="mb-12 text-center sm:mb-16">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="mb-3 block text-[10px] font-black uppercase tracking-[0.65em] text-violet-400/80"
           >
@@ -149,7 +146,8 @@ export function Skills() {
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             className="font-display text-4xl font-black tracking-tighter text-white md:text-7xl"
           >
@@ -157,7 +155,8 @@ export function Skills() {
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.55, delay: 0.2 }}
             className="mx-auto mt-4 max-w-md text-sm text-slate-400"
           >
@@ -167,12 +166,11 @@ export function Skills() {
 
         {/* Tech grid */}
         <motion.div
-          ref={gridRef}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 md:grid-cols-6 lg:gap-5"
+          className="grid grid-cols-2 gap-3 min-[400px]:grid-cols-3 sm:grid-cols-4 sm:gap-4 md:grid-cols-6 lg:gap-5"
         >
           {techStack.map((tech) => (
             <TechCard key={tech.name} tech={tech} />
@@ -182,7 +180,8 @@ export function Skills() {
         {/* Category tags */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={gridInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-10 flex flex-wrap justify-center gap-2 sm:mt-14"
         >
