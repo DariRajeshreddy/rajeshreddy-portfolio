@@ -42,19 +42,27 @@ export function Contact() {
     setStatus('sending');
 
     const formData = new FormData(e.currentTarget);
-    formData.append("access_key", "557a9611-ef37-4bdb-afcf-4681774e8ab5");
+    const object = Object.fromEntries(formData);
     
-    // Email Template Customization
-    formData.append("from_name", "Portfolio Visitor");
-    formData.append("subject", "✨ New Message from Rajesh Reddy Portfolio");
+    // Add required and custom fields
+    object.access_key = "557a9611-ef37-4bdb-afcf-4681774e8ab5";
+    object.from_name = "Portfolio Visitor";
+    object.subject = "✨ New Message from Rajesh Reddy Portfolio";
+
+    const json = JSON.stringify(object);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: formData
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: json
       });
 
       const data = await response.json();
+      console.log("Web3Forms Response:", data);
 
       if (data.success) {
         setStatus('success');
@@ -62,6 +70,7 @@ export function Contact() {
         setStatus('error');
       }
     } catch (err) {
+      console.error("Fetch error:", err);
       setStatus('error');
     }
   };
