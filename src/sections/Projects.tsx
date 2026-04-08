@@ -1,196 +1,218 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ChevronRight } from 'lucide-react';
 import { GitHubDark as Github } from '@ridemountainpig/svgl-react';
-import { useLayoutEffect, useRef } from 'react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import gsap from 'gsap';
-import img from "../assets/black.svg";
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const PROFILE = 'https://github.com/DariRajeshreddy';
-
-export interface ProjectItem {
+interface ProjectItem {
   title: string;
   description: string;
+  features: string[];
   tech: string[];
   link: string;
   github: string;
-  image: any;
+  image: string;
+  accent: string;
 }
 
-/** Roles and stacks aligned with resume — placeholder projects removed */
 const projects: ProjectItem[] = [
   {
-    title: 'Exchek Admin Portal',
-    description:
-      'Centralized admin for user management, RBAC, KYC verification with document preview (zoom), leads management, RSuite UIs, REST APIs, and global master configuration.',
-    tech: ['React.js', 'RSuite', 'Redux', 'JavaScript', 'HTML5', 'CSS3', 'REST APIs'],
+    title: 'ChefSheet',
+    description: 'Efficient catering preparation manager for professional chefs to track orders, portions, and supplies.',
+    features: ['Smart Portioning', 'Inventory Tracking', 'Menu Management', 'Real-time Sync'],
+    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Supabase'],
     link: '#',
-    github: PROFILE,
-    image:img,
+    github: 'https://github.com/DariRajeshreddy/chefsheet',
+    image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop',
+    accent: '#6366f1',
+  },
+  {
+    title: 'Sri Nirmala Catering',
+    description: 'A premium, high-motion website for a leading catering service, featuring menu catalog and 3D interactions.',
+    features: ['3D Tilt Effects', 'Staggered Reveals', 'Responsive Menu', 'Contact Integration'],
+    tech: ['Framer Motion', 'GSAP', 'React', 'Lucide'],
+    link: '#',
+    github: 'https://github.com/DariRajeshreddy/sri-nirmala-catering',
+    image: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800&auto=format&fit=crop',
+    accent: '#f43f5e',
+  },
+  {
+    title: 'Exchek Admin Portal',
+    description: 'Centralized admin for user management, RBAC, KYC verification with document preview, and leads management.',
+    features: ['Advanced RBAC', 'KYC Verification', 'Leads Management', 'Global Config'],
+    tech: ['React.js', 'RSuite', 'Redux', 'REST APIs'],
+    link: '#',
+    github: 'https://github.com/DariRajeshreddy',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+    accent: '#38bdf8',
   },
   {
     title: 'AuditFY Practice Manager',
-    description:
-      'Office management for CA/CS: dashboards, UDIN Manager, DSC Register, assessments, billing, and real-time tracking of compliance and client work.',
-    tech: ['React', 'JavaScript', 'REST APIs', 'HTML5', 'CSS3'],
+    description: 'Office management for CA/CS professionals: dashboards, UDIN Manager, DSC Register, and billing.',
+    features: ['UDIN Manager', 'DSC Register', 'Billing System', 'Audit Tracking'],
+    tech: ['React', 'JavaScript', 'REST APIs', 'CSS3'],
     link: '#',
-    github: PROFILE,
-    image:
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+    github: 'https://github.com/DariRajeshreddy',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop',
+    accent: '#8b5cf6',
   },
   {
     title: 'Teacher Console',
-    description:
-      'React and REST APIs for interactive forms, Kanban workflows, and data-driven views; alerts for digital signature expiry and assessments; responsive UI improvements.',
-    tech: ['React', 'JavaScript', 'HTML5', 'CSS3', 'Git', 'REST APIs'],
+    description: 'Interactive dashboard for education management involving Kanban workflows and assessment tracking.',
+    features: ['Kanban Workflows', 'Alerts System', 'Data Views', 'Progress Tracking'],
+    tech: ['React', 'JavaScript', 'Git', 'REST APIs'],
     link: '#',
-    github: PROFILE,
-    image:
-      'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=800&auto=format&fit=crop',
+    github: 'https://github.com/DariRajeshreddy',
+    image: 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=800&auto=format&fit=crop',
+    accent: '#34d399',
   },
   {
     title: 'Chimple Student App',
-    description:
-      'Internship: CRUD for assignments and users, Firestore modeling, Firebase cloud functions & OTP, Ionic Capacitor plugin, local storage performance, and Android testing.',
-    tech: ['TypeScript', 'React', 'Firebase', 'JavaScript', 'HTML5', 'CSS'],
+    description: 'Student-facing mobile application with Firebase backend and interactive assignments.',
+    features: ['Assignments CRUD', 'Firebase Logic', 'Performance Tuning', 'Local Storage'],
+    tech: ['TypeScript', 'React', 'Firebase', 'Ionic'],
     link: '#',
-    github: PROFILE,
-    image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop',
+    github: 'https://github.com/DariRajeshreddy',
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop',
+    accent: '#f59e0b',
   },
 ];
 
-function ProjectCard({ project }: { project: ProjectItem }) {
+function ProjectCard({ project, index }: { project: ProjectItem; index: number }) {
   const finePointer = useMediaQuery('(pointer: fine)');
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-120, 120], [22, -22]);
-  const rotateY = useTransform(x, [-120, 120], [-22, 22]);
-
-  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    x.set(event.clientX - (rect.left + rect.width / 2));
-    y.set(event.clientY - (rect.top + rect.height / 2));
-  }
-
-  function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
-  }
+  const rotateX = useTransform(y, [-100, 100], [15, -15]);
+  const rotateY = useTransform(x, [-100, 100], [-15, 15]);
 
   return (
     <motion.div
-      style={
-        finePointer
-          ? { rotateX, rotateY, transformPerspective: 1100 }
-          : { transformPerspective: 1000 }
-      }
-      onMouseMove={finePointer ? handleMouseMove : undefined}
-      onMouseLeave={finePointer ? handleMouseLeave : undefined}
-      className="project-card group relative mb-8 w-full max-w-[100%] justify-self-center sm:mb-10 sm:max-w-sm"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.7, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      onMouseMove={finePointer ? (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set(e.clientX - (rect.left + rect.width / 2));
+        y.set(e.clientY - (rect.top + rect.height / 2));
+      } : undefined}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformPerspective: 1200 }}
+      className="group relative flex flex-col sm:flex-row gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-4 transition-all duration-500 hover:border-white/20 hover:bg-white/[0.06] hover:shadow-[0_20px_80px_rgba(0,0,0,0.5)] [backface-visibility:hidden] [transform:translate3d(0,0,0)]"
     >
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-3 shadow-xl backdrop-blur-xl transition-all duration-500 group-hover:border-primary/45 group-hover:bg-white/[0.07] group-hover:shadow-[0_25px_80px_rgba(99,102,241,0.2)] sm:rounded-3xl sm:p-4">
-        <div className="relative mb-4 h-44 overflow-hidden rounded-xl sm:mb-6 sm:h-52 sm:rounded-2xl">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              data-cursor-hover
-              className="rounded-full bg-white/15 p-3 transition-colors hover:bg-white/25"
-            >
-              <Github width={20} height={20} />
-            </a>
-            <a
-              href={project.link}
-              data-cursor-hover
-              className="rounded-full bg-primary/90 p-3 transition-colors hover:bg-primary"
-            >
-              <ExternalLink size={20} />
-            </a>
-          </div>
-        </div>
+      {/* Dynamic Glow */}
+      <div 
+        className="absolute -inset-2 -z-10 rounded-[2.5rem] opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-10"
+        style={{ backgroundColor: project.accent }}
+      />
 
-        <h3 className="mb-2 text-xl font-bold text-white sm:text-2xl">{project.title}</h3>
-        <p className="mb-6 line-clamp-3 text-sm leading-relaxed text-slate-400">
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-sky-300"
-            >
+      {/* Image Section */}
+      <div className="relative h-56 w-full shrink-0 overflow-hidden rounded-2xl sm:h-auto sm:w-72 md:w-80">
+        <img
+          src={project.image}
+          alt={project.title}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        
+        {/* Quick Tech Overlay */}
+        <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
+          {project.tech.slice(0, 3).map((t) => (
+            <span key={t} className="rounded-full bg-black/50 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
               {t}
             </span>
           ))}
         </div>
+      </div>
+
+      {/* Info Section */}
+      <div className="flex flex-1 flex-col justify-center py-2 sm:py-4">
+        <div className="flex items-start justify-between">
+          <h3 className="font-display text-2xl font-black tracking-tighter text-white sm:text-3xl md:text-4xl">
+            {project.title}
+          </h3>
+          <div className="flex gap-2">
+            <motion.a
+              href={project.github}
+              target="_blank"
+              whileHover={{ scale: 1.1, color: '#fff' }}
+              className="text-slate-400 transition-colors"
+            >
+              <Github width={20} height={20} />
+            </motion.a>
+            <motion.a
+              href={project.link}
+              target="_blank"
+              whileHover={{ scale: 1.1, color: project.accent }}
+              className="text-slate-400 transition-colors"
+            >
+              <ExternalLink size={20} />
+            </motion.a>
+          </div>
+        </div>
+
+        <p className="mt-4 mb-6 text-sm leading-relaxed text-slate-400 sm:text-base">
+          {project.description}
+        </p>
+
+        {/* Features Hidden on Mobile or in simple list */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+          {project.features.map((f) => (
+            <div key={f} className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+              <ChevronRight size={12} style={{ color: project.accent }} />
+              {f}
+            </div>
+          ))}
+        </div>
+
+        {/* Hover Accent Line */}
+        <div 
+          className="mt-8 h-0.5 w-0 rounded-full transition-all duration-700 group-hover:w-full"
+          style={{ backgroundColor: project.accent }}
+        />
       </div>
     </motion.div>
   );
 }
 
 export function Projects() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useLayoutEffect(() => {
-    const root = sectionRef.current;
-    if (!root) return;
-    const ctx = gsap.context(() => {
-      gsap.from('.projects-head', {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: root,
-          start: 'top 78%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-      gsap.from('.project-card', {
-        opacity: 0,
-        y: 70,
-        scale: 0.94,
-        stagger: 0.12,
-        duration: 0.85,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: root.querySelector('.projects-grid'),
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-    }, root);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="projects" ref={sectionRef} className="relative z-10 px-4 py-20 sm:px-6 sm:py-28">
+    <section id="projects" className="relative z-10 px-4 py-24 sm:px-6 sm:py-32">
+       {/* Background */}
+       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(99,102,241,0.05),transparent_80%)]" />
+
       <div className="mx-auto max-w-6xl">
-        <div className="projects-head mb-12 text-center sm:mb-20">
-          <h2 className="mb-4 font-display text-4xl font-extrabold tracking-tighter text-white sm:mb-6 sm:text-5xl md:text-7xl">
-            SELECTED <span className="text-glow text-primary">WORK</span>
+        <div className="mb-16 text-center">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-3 block text-[10px] font-black uppercase tracking-[0.7em] text-primary"
+          >
+            Portfolio
+          </motion.span>
+          <h2 className="font-display text-5xl font-black tracking-tighter text-white sm:text-7xl md:text-9xl">
+            SELECTED <span className="text-glow text-primary">WORKS</span>
           </h2>
-          <p className="mx-auto max-w-lg text-slate-400">
-            Professional products from my experience — stacks match my resume.
-          </p>
         </div>
 
-        <div className="projects-grid grid grid-cols-1 justify-items-stretch gap-x-6 gap-y-8 sm:justify-items-center md:grid-cols-2 md:gap-x-10 xl:grid-cols-2">
-          {projects.map((p) => (
-            <ProjectCard key={p.title} project={p} />
+        <div className="flex flex-col gap-10">
+          {projects.map((p, i) => (
+            <ProjectCard key={p.title} project={p} index={i} />
           ))}
+        </div>
+
+        {/* Global Action */}
+        <div className="mt-20 flex justify-center">
+           <motion.a
+            href="https://github.com/DariRajeshreddy"
+            target="_blank"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group flex items-center gap-4 rounded-3xl border border-white/10 bg-white/[0.02] px-10 py-5 text-sm font-bold uppercase tracking-widest text-white backdrop-blur-xl transition-all hover:border-primary/50 hover:bg-primary/5 hover:shadow-[0_0_40px_rgba(99,102,241,0.2)]"
+          >
+            <Github width={20} height={20} />
+            Explore Full Archive
+          </motion.a>
         </div>
       </div>
     </section>

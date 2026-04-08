@@ -8,59 +8,63 @@ import { LenisRefContext } from '../context/LenisContext';
 gsap.registerPlugin(ScrollTrigger);
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
-  const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
+  const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    const narrow = window.matchMedia('(max-width: 767px)').matches;
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
     const instance = new Lenis({
-      duration: narrow ? 0.88 : 1.12,
+      duration: isMobile ? 0.9 : 1.3, // Back to slightly smoother but responsive
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: narrow ? 0.92 : 1,
+      wheelMultiplier: 1,
+      touchMultiplier: 2, // Double response for touch to make it feel "light"
+      lerp: isMobile ? 0.12 : 0.08, // Slightly more responsive lerp for mobile
       syncTouch: true,
-      touchMultiplier: narrow ? 1.35 : 1.15,
     });
+    
     lenisRef.current = instance;
 
-    instance.on('scroll', ScrollTrigger.update);
-
-    ScrollTrigger.scrollerProxy(document.documentElement, {
-      scrollTop(value) {
-        if (arguments.length && typeof value === 'number') {
-          instance.scrollTo(value, { immediate: true });
-        }
-        return instance.scroll;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
+    // Sync GSAP with Lenis
+    instance.on('scroll', () => {
+      ScrollTrigger.update();
     });
 
-    const onRefresh = () => {
-      instance.resize();
+    const update = (time: number) => {
+      instance.raf(time * 1000);
     };
-    ScrollTrigger.addEventListener('refresh', onRefresh);
 
-    let rafId = 0;
-    function raf(time: number) {
-      instance.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
+    gsap.ticker.add(update);
+    gsap.ticker.lagSmoothing(500, 33);
 
-    ScrollTrigger.refresh();
+    // Refresh on layout changes
+    const resizeObserver = new ResizeObserver(() => {
+      instance.resize();
+      ScrollTrigger.refresh();
+    });
+    resizeObserver.observe(document.body);
+
+    const handleAnchorLinks = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+      if (anchor && anchor.hash && anchor.origin === window.location.origin) {
+        e.preventDefault();
+        const targetElement = document.querySelector(anchor.hash) as HTMLElement;
+        if (targetElement) {
+          instance.scrollTo(targetElement, { offset: -100, duration: 1.2 });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorLinks);
 
     return () => {
-      cancelAnimationFrame(rafId);
-      ScrollTrigger.removeEventListener('refresh', onRefresh);
-      ScrollTrigger.scrollerProxy(document.documentElement, {});
       instance.destroy();
+      gsap.ticker.remove(update);
+      resizeObserver.disconnect();
+      document.removeEventListener('click', handleAnchorLinks);
       lenisRef.current = null;
     };
   }, []);

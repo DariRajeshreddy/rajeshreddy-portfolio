@@ -1,7 +1,9 @@
-import { useLayoutEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Briefcase, Calendar } from 'lucide-react';
+import { useLayoutEffect } from 'react';
+import { Briefcase, Calendar, ChevronRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,6 +15,8 @@ const experiences = [
     description:
       'User management, roles & permissions, KYC verification with interactive document preview, leads management, RSuite components, REST API integration, and global master modules.',
     tech: ['React.js', 'RSuite', 'Redux', 'JavaScript', 'HTML5', 'CSS3', 'REST APIs'],
+    accent: '#6366f1',
+    current: true,
   },
   {
     title: 'Front-End Developer',
@@ -21,6 +25,8 @@ const experiences = [
     description:
       'Dashboard, UDIN Manager, DSC Register, assessments, and billing; dynamic UIs for compliance, tasks, and client management.',
     tech: ['React', 'JavaScript', 'REST APIs', 'HTML5', 'CSS3'],
+    accent: '#38bdf8',
+    current: false,
   },
   {
     title: 'Front-End Developer',
@@ -29,6 +35,8 @@ const experiences = [
     description:
       'React and REST APIs for forms, Kanban workflows, and data views; real-time alerts for digital signatures and pending assessments; responsive UI/UX improvements.',
     tech: ['React', 'JavaScript', 'HTML5', 'CSS3', 'Git', 'REST APIs'],
+    accent: '#a78bfa',
+    current: false,
   },
   {
     title: 'Intern — Front-End Developer',
@@ -37,82 +45,163 @@ const experiences = [
     description:
       'Assignments and users CRUD, Firestore collections, Firebase cloud functions, OTP with timer, Ionic Capacitor plugin, local storage optimizations, and Android testing.',
     tech: ['TypeScript', 'React', 'Firebase', 'JavaScript', 'HTML5', 'CSS'],
+    accent: '#34d399',
+    current: false,
   },
 ];
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { type: 'spring' as const, stiffness: 340, damping: 30 },
+  },
+};
 
 export function Experience() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
     const ctx = gsap.context(() => {
-      gsap.from('.exp-head', {
-        opacity: 0,
-        y: 36,
-        duration: 0.85,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
-        },
+      gsap.to('.exp-dot', {
+        boxShadow: '0 0 20px rgba(59,130,246,0.7)',
+        duration: 1.2,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: 0.3,
       });
-      gsap.from('.exp-item', {
-        opacity: 0,
-        x: -40,
-        stagger: 0.2,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-    }, containerRef);
+    }, el);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="experience" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28">
+    <section id="experience" className="relative z-10 px-4 py-24 sm:px-6 sm:py-32">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_70%_at_20%_50%,rgba(99,102,241,0.06),transparent_60%)]" />
+
       <div className="mx-auto max-w-4xl" ref={containerRef}>
-        <div className="exp-head mb-10 text-center sm:mb-16">
-          <h2 className="mb-3 font-display text-3xl font-extrabold tracking-tighter text-white sm:mb-4 sm:text-4xl md:text-6xl">
+        {/* Title */}
+        <div className="mb-10 text-center sm:mb-16">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-3 block text-[10px] font-black uppercase tracking-[0.65em] text-primary/80"
+          >
+            Career
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            className="mb-3 font-display text-3xl font-extrabold tracking-tighter text-white sm:mb-4 sm:text-4xl md:text-6xl"
+          >
             PROFESSIONAL <span className="text-primary">EXPERIENCE</span>
-          </h2>
-          <p className="text-slate-400">Roles, impact, and the tools behind the work.</p>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: 0.2 }}
+            className="text-slate-400"
+          >
+            Roles, impact, and the tools behind the work.
+          </motion.p>
         </div>
 
-        <div className="relative space-y-8 before:absolute before:top-4 before:bottom-4 before:left-[15px] before:w-0.5 before:bg-gradient-to-b before:from-primary/40 before:via-white/10 before:to-violet-500/30 sm:space-y-12 sm:before:left-[21px]">
+        {/* Timeline */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.05 }}
+          className="relative space-y-6 sm:space-y-8"
+        >
+          {/* Timeline line */}
+          <motion.div
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            className="absolute top-4 bottom-4 left-[15px] w-0.5 origin-top rounded-full bg-gradient-to-b from-primary/50 via-violet-500/30 to-transparent sm:left-[21px]"
+          />
+
           {experiences.map((exp, i) => (
-            <div key={`${exp.company}-${i}`} className="exp-item relative pl-[3.25rem] sm:pl-16">
-              <div className="absolute top-2 left-0 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-primary/35 bg-slate-950/80 shadow-[0_0_18px_rgba(59,130,246,0.35)] backdrop-blur-md sm:h-11 sm:w-11">
-                <Briefcase className="h-[18px] w-[18px] text-primary sm:h-5 sm:w-5" />
+            <motion.div
+              key={`${exp.company}-${i}`}
+              variants={itemVariants}
+              className="group relative pl-[3.25rem] sm:pl-16"
+            >
+              <div
+                className="exp-dot absolute top-3 left-0 z-10 flex h-8 w-8 items-center justify-center rounded-full border backdrop-blur-md sm:h-10 sm:w-10"
+                style={{
+                  backgroundColor: `${exp.accent}22`,
+                  borderColor: `${exp.accent}55`,
+                  boxShadow: `0 0 12px ${exp.accent}44`,
+                }}
+              >
+                <Briefcase className="h-4 w-4 sm:h-[18px] sm:w-[18px]" style={{ color: exp.accent }} />
               </div>
 
-              <div className="glass neon-border rounded-2xl border border-white/10 p-5 transition-transform duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.12)] sm:rounded-3xl sm:p-8 md:hover:scale-[1.01]">
-                <div className="mb-4 flex flex-col justify-between gap-2 md:flex-row md:items-center">
-                  <h3 className="text-2xl font-bold text-white">{exp.company}</h3>
-                  <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1 text-sm font-semibold text-sky-300">
-                    <Calendar size={16} />
+              {exp.current && (
+                <div className="absolute -top-5 left-[3.25rem] z-20 sm:left-16">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/50 bg-emerald-500/20 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-300 backdrop-blur-md">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]" />
+                    Current Role
+                  </span>
+                </div>
+              )}
+
+              <motion.div
+                whileHover={{ scale: 1.01, y: -2 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                className={`glass gpu rounded-2xl border border-white/10 p-5 transition-all duration-500 group-hover:shadow-[0_0_50px_rgba(99,102,241,0.15)] sm:rounded-3xl sm:p-8 ${exp.current ? 'mt-6' : ''}`}
+                style={{
+                  borderTopColor: `${exp.accent}33`,
+                }}
+              >
+                <div className="mb-4 flex flex-col justify-between gap-2 md:flex-row md:items-start">
+                  <div>
+                    <h3 className="text-xl font-bold text-white sm:text-2xl">{exp.company}</h3>
+                    <div className="mt-1 flex items-center gap-1.5 text-slate-400">
+                      <ChevronRight size={14} style={{ color: exp.accent }} />
+                      <span className="text-sm font-medium">{exp.title}</span>
+                    </div>
+                  </div>
+                  <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-sm font-semibold text-sky-300 whitespace-nowrap">
+                    <Calendar size={14} />
                     {exp.period}
                   </div>
                 </div>
-                <h4 className="mb-4 text-lg font-medium text-slate-300">{exp.title}</h4>
-                <p className="mb-6 leading-relaxed text-slate-400">{exp.description}</p>
+
+                <p className="mb-5 leading-relaxed text-slate-400 text-sm sm:text-base">{exp.description}</p>
+
                 <div className="flex flex-wrap gap-2">
                   {exp.tech.map((t) => (
                     <span
                       key={t}
-                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-400"
+                      className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1 text-xs font-medium text-slate-400 transition-colors hover:border-white/20 hover:text-white"
                     >
                       {t}
                     </span>
                   ))}
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
