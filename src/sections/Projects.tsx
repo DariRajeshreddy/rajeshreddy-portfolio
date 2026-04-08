@@ -31,7 +31,7 @@ const projects: ProjectItem[] = [
     features: ['3D Tilt Effects', 'Staggered Reveals', 'Responsive Menu', 'Contact Integration'],
     tech: ['Framer Motion', 'GSAP', 'React', 'Lucide'],
     link: '#',
-    github: 'https://github.com/DariRajeshreddy/sri-nirmala-catering',
+    github: 'https://github.com/DariRajeshreddy/sri-nirmala-catering-website',
     image: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800&auto=format&fit=crop',
     accent: '#f43f5e',
   },
@@ -100,7 +100,7 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
       className="group relative flex flex-col sm:flex-row gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-4 transition-all duration-500 hover:border-white/20 hover:bg-white/[0.06] hover:shadow-[0_20px_80px_rgba(0,0,0,0.5)] [backface-visibility:hidden] [transform:translate3d(0,0,0)]"
     >
       {/* Dynamic Glow */}
-      <div 
+      <div
         className="absolute -inset-2 -z-10 rounded-[2.5rem] opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-10"
         style={{ backgroundColor: project.accent }}
       />
@@ -113,7 +113,7 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-        
+
         {/* Quick Tech Overlay */}
         <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
           {project.tech.slice(0, 3).map((t) => (
@@ -165,7 +165,7 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
         </div>
 
         {/* Hover Accent Line */}
-        <div 
+        <div
           className="mt-8 h-0.5 w-0 rounded-full transition-all duration-700 group-hover:w-full"
           style={{ backgroundColor: project.accent }}
         />
@@ -177,8 +177,8 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
 export function Projects() {
   return (
     <section id="projects" className="relative z-10 px-4 py-24 sm:px-6 sm:py-32">
-       {/* Background */}
-       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(99,102,241,0.05),transparent_80%)]" />
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(99,102,241,0.05),transparent_80%)]" />
 
       <div className="mx-auto max-w-6xl">
         <div className="mb-16 text-center">
@@ -203,7 +203,7 @@ export function Projects() {
 
         {/* Global Action */}
         <div className="mt-20 flex justify-center">
-           <motion.a
+          <motion.a
             href="https://github.com/DariRajeshreddy"
             target="_blank"
             whileHover={{ scale: 1.05 }}
