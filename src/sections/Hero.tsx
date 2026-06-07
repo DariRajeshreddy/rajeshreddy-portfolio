@@ -355,13 +355,12 @@ export function Hero() {
               )}
             </div>
 
-            {/* Animated Subtitles / Texting Effect */}
             {isPlaying && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="absolute -bottom-4 left-4 right-4 rounded-2xl border border-white/10 bg-[#020617]/90 p-4 sm:p-6 backdrop-blur-xl shadow-2xl"
+                className="absolute top-full mt-4 sm:top-auto sm:-bottom-4 left-0 right-0 sm:left-4 sm:right-4 z-50 rounded-2xl border border-white/10 bg-slate-950/95 p-4 sm:p-6 backdrop-blur-xl shadow-2xl"
               >
                 <div className="flex flex-wrap gap-x-1.5 gap-y-1">
                   {INTRO_WORDS.map((word, i) => {
