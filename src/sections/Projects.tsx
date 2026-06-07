@@ -179,7 +179,7 @@ const projects: ProjectItem[] = [
 
 const FILTERS = ['All', 'React', 'TypeScript', 'Flutter', 'Node.js'];
 
-function ProjectCard({ project, index }: { project: ProjectItem; index: number }) {
+function ProjectCard({ project }: { project: ProjectItem }) {
   return (
     <motion.div
       layout
@@ -351,8 +351,8 @@ export function Projects() {
             </div>
             <motion.div layout className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:gap-8">
               <AnimatePresence mode="popLayout">
-                {professionalProjects.map((p, i) => (
-                  <ProjectCard key={p.id} project={p} index={i} />
+                {professionalProjects.map((p) => (
+                  <ProjectCard key={p.id} project={p} />
                 ))}
               </AnimatePresence>
             </motion.div>
@@ -370,8 +370,8 @@ export function Projects() {
             </div>
             <motion.div layout className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:gap-8">
               <AnimatePresence mode="popLayout">
-                {personalProjects.map((p, i) => (
-                  <ProjectCard key={p.id} project={p} index={i} />
+                {personalProjects.map((p) => (
+                  <ProjectCard key={p.id} project={p} />
                 ))}
               </AnimatePresence>
             </motion.div>

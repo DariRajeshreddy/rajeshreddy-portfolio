@@ -2,7 +2,6 @@ import {
   motion,
   useMotionTemplate,
   useMotionValue,
-  useScroll,
   useSpring,
   useTransform,
 } from 'framer-motion';
