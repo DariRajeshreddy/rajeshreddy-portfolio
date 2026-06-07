@@ -186,23 +186,64 @@ export function Hero() {
           </motion.div>
 
           {/* Main heading */}
-          <div className="relative overflow-hidden">
-            <h1 className="font-display text-[clamp(2.5rem,8vw,5.5rem)] font-black leading-[1.05] tracking-tighter text-white">
-              Hi, I'm
-              <br />
-              <span className="relative inline-block md:inline">
-                <span className="bg-gradient-to-r from-sky-400 via-primary to-violet-500 bg-clip-text text-transparent">
-                  Rajesh Reddy
-                </span>
-                {/* Underline accent */}
-                <motion.span
-                  initial={reduceMotion ? false : { scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: reduceMotion ? 0 : 1.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute -bottom-1 left-0 right-0 block h-[3px] origin-left rounded-full bg-gradient-to-r from-sky-400 via-primary to-violet-500"
-                />
-              </span>
-            </h1>
+          <div className="relative perspective-1000 z-10">
+            {/* Continuous Floating Container */}
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <motion.h1 
+                className="font-display text-[clamp(2.5rem,8vw,5.5rem)] font-black leading-[1.05] tracking-tighter text-white"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.25, delayChildren: 1.0 } }
+                }}
+              >
+                {['Hi,', "I'm", 'Rajesh', 'Reddy'].map((word, wIdx) => {
+                  const isGradient = word === 'Rajesh' || word === 'Reddy';
+                  return (
+                    <span key={wIdx} className="inline-block whitespace-nowrap mr-[clamp(0.6rem,2vw,1.5rem)]">
+                      <motion.span
+                        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+                        className="inline-flex"
+                      >
+                        {word.split('').map((char, i) => (
+                          <motion.span
+                            key={i}
+                            variants={{
+                              hidden: { opacity: 0, y: 30, rotateX: 90, scale: 0.5 },
+                              visible: { opacity: 1, y: 0, rotateX: 0, scale: 1, transition: { type: 'spring', damping: 12, stiffness: 100 } }
+                            }}
+                            whileHover={{ 
+                              y: -12, 
+                              scale: 1.2, 
+                              rotateZ: Math.random() > 0.5 ? 5 : -5,
+                              filter: "brightness(1.3)",
+                              transition: { type: 'spring', damping: 10, stiffness: 400 } 
+                            }}
+                            className="inline-block cursor-default"
+                          >
+                            {isGradient ? (
+                              <motion.span
+                                animate={{ backgroundPosition: ["0% center", "200% center"] }}
+                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                                className="inline-block bg-[linear-gradient(to_right,#38bdf8,#818cf8,#c084fc,#e879f9,#38bdf8)] bg-[length:200%_auto] bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(167,139,250,0.3)] pb-1 sm:pb-3"
+                              >
+                                {char}
+                              </motion.span>
+                            ) : (
+                              <span className="inline-block text-slate-100 pb-1 sm:pb-3">{char}</span>
+                            )}
+                          </motion.span>
+                        ))}
+                      </motion.span>
+                      {wIdx === 1 && <br className="hidden sm:block" />}
+                    </span>
+                  );
+                })}
+              </motion.h1>
+            </motion.div>
           </div>
 
           {/* Role tag */}
@@ -215,7 +256,7 @@ export function Hero() {
           {/* Animated Description */}
           <motion.p 
             className="mt-6 max-w-xl px-1 text-base font-light leading-relaxed text-slate-400 sm:mt-8 sm:text-lg"
-            initial={reduceMotion ? false : "hidden"}
+            initial="hidden"
             animate="visible"
             variants={{
               hidden: { opacity: 0 },
@@ -230,8 +271,8 @@ export function Hero() {
                 key={i}
                 className={`inline-block mr-1.5 ${['React,', 'Framer', 'Motion,', 'GSAP'].includes(word) ? 'font-medium text-white' : ''}`}
                 variants={{
-                  hidden: { opacity: 0, y: 10, filter: 'blur(4px)' },
-                  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { type: 'spring', damping: 20, stiffness: 200 } }
+                  hidden: { opacity: 0, y: 15, scale: 0.9 },
+                  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 200 } }
                 }}
               >
                 {word}
