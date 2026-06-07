@@ -21,9 +21,7 @@
     display: none;
   }
 
-  html, body {
-    overscroll-behavior: none;
-  }
+  /* Native scrolling mechanics restored */
 
   * {
     box-sizing: border-box;
@@ -32,7 +30,6 @@
 
   html {
     background-color: #020617;
-    overflow-x: hidden;
   }
 
   body {
@@ -40,7 +37,12 @@
     color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
+  }
+
+  #root {
+    overflow-x: clip;
+    width: 100%;
+    position: relative;
   }
 
   .bg-clip-text.text-transparent {

@@ -21,7 +21,7 @@ function MainContent() {
 
   return (
     <motion.main
-      className="gpu relative z-10 w-full pt-[5.25rem] sm:pt-20 md:pt-20"
+      className="relative z-10 w-full pt-[5.25rem] sm:pt-20 md:pt-20"
       initial={false}
       animate={loaderComplete ? 'enter' : 'hidden'}
       variants={{

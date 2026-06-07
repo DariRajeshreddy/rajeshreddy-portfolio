@@ -38,7 +38,7 @@ export function HeroCanvas() {
 
   return (
     <Canvas
-      className="h-full w-full touch-none"
+      className="h-full w-full pointer-events-none"
       dpr={dpr}
       gl={{
         antialias: !isMinimal,
