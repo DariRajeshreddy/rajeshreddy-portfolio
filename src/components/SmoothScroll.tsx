@@ -13,16 +13,33 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
+    // Completely bypass Lenis on mobile for perfect 120fps native touch momentum scrolling
+    if (isMobile) {
+      const handleAnchorLinks = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const anchor = target.closest('a');
+        if (anchor && anchor.hash && anchor.origin === window.location.origin) {
+          e.preventDefault();
+          const targetElement = document.querySelector(anchor.hash) as HTMLElement;
+          if (targetElement) {
+            const top = targetElement.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        }
+      };
+      document.addEventListener('click', handleAnchorLinks);
+      return () => document.removeEventListener('click', handleAnchorLinks);
+    }
+
     const instance = new Lenis({
-      duration: isMobile ? 0.9 : 1.3, // Back to slightly smoother but responsive
+      duration: 1.3,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 2, 
-      lerp: isMobile ? 0.12 : 0.08, 
-      syncTouch: false, // Disabled to allow native touch momentum scrolling on mobile
+      lerp: 0.08, 
     });
     
     lenisRef.current = instance;
