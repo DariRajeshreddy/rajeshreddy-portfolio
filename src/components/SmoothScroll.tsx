@@ -20,9 +20,9 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2, // Double response for touch to make it feel "light"
-      lerp: isMobile ? 0.12 : 0.08, // Slightly more responsive lerp for mobile
-      syncTouch: true,
+      touchMultiplier: 2, 
+      lerp: isMobile ? 0.12 : 0.08, 
+      syncTouch: false, // Disabled to allow native touch momentum scrolling on mobile
     });
     
     lenisRef.current = instance;

@@ -1,11 +1,28 @@
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useLayoutEffect } from 'react';
+import { motion, useInView, animate } from 'framer-motion';
 import { Code2, Zap, Globe } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
-gsap.registerPlugin(ScrollTrigger);
+function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (inView && ref.current) {
+      const controls = animate(0, value, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate(v) {
+          if (ref.current) {
+            ref.current.textContent = Math.round(v) + suffix;
+          }
+        }
+      });
+      return () => controls.stop();
+    }
+  }, [inView, value, suffix]);
+
+  return <span ref={ref}>0{suffix}</span>;
+}
 
 const highlights = [
   {
@@ -47,28 +64,6 @@ const itemVariants = {
 };
 
 export function About() {
-  const statsRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    const el = statsRef.current;
-    if (!el) return;
-    const ctx = gsap.context(() => {
-      gsap.from('.about-stat', {
-        opacity: 0,
-        y: 50,
-        scale: 0.9,
-        stagger: 0.12,
-        duration: 0.85,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-    }, el);
-    return () => ctx.revert();
-  }, []);
 
   return (
     <section
@@ -154,15 +149,22 @@ export function About() {
         </motion.div>
 
         {/* Stats */}
-        <div ref={statsRef} className="grid w-full grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="grid w-full grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3"
+        >
           {[
-            { n: '2+', l: 'Years Experience', color: '#6366f1' },
-            { n: '15+', l: 'Shipped Projects', color: '#38bdf8' },
-            { n: '12+', l: 'Core Technologies', color: '#8b5cf6' },
+            { n: 2, suffix: '+', l: 'Years Experience', color: '#6366f1' },
+            { n: 15, suffix: '+', l: 'Shipped Projects', color: '#38bdf8' },
+            { n: 12, suffix: '+', l: 'Core Technologies', color: '#8b5cf6' },
           ].map((item) => (
-            <div
+            <motion.div
               key={item.l}
-              className="about-stat glass neon-border group relative overflow-hidden rounded-2xl border border-white/10 p-6 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] sm:rounded-3xl sm:p-8"
+              variants={itemVariants}
+              className="glass neon-border group relative overflow-hidden rounded-2xl border border-white/10 p-6 transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] sm:rounded-3xl sm:p-8"
             >
               {/* Glow accent */}
               <div
@@ -170,14 +172,14 @@ export function About() {
                 style={{ backgroundColor: item.color }}
               />
               <h3 className="relative font-display text-3xl font-black text-white sm:text-4xl">
-                {item.n}
+                <AnimatedCounter value={item.n} suffix={item.suffix} />
               </h3>
               <p className="relative mt-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
                 {item.l}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

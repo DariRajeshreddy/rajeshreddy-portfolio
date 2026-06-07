@@ -64,24 +64,20 @@ function TechCard({ tech }: { tech: TechEntry }) {
   const Icon = tech.icon;
 
   return (
-    <motion.div
-      variants={cardVariants}
-      whileHover={{
-        scale: 1.06,
-        y: -6,
-        rotateY: 5,
-        transition: { type: 'spring' as const, stiffness: 400, damping: 20 },
-      }}
-      className="group relative cursor-default"
-      style={{ transformStyle: 'preserve-3d' }}
-    >
-      {/* Glow backdrop */}
-      <div
-        className="absolute inset-0 rounded-2xl opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-40"
-        style={{ backgroundColor: tech.color }}
-      />
+      <motion.div
+        variants={cardVariants}
+        whileHover={{
+          scale: 1.06,
+          y: -6,
+          rotateY: 5,
+          boxShadow: `0 20px 50px -10px ${tech.color}40`,
+          transition: { type: 'spring' as const, stiffness: 400, damping: 20 },
+        }}
+        className="group relative cursor-default rounded-2xl"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
       {/* Card */}
-      <div className="gpu relative flex flex-col items-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.05] p-5 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:border-white/20 group-hover:bg-white/[0.08] group-hover:shadow-[0_15px_40px_rgba(0,0,0,0.35)] sm:p-6">
+      <div className="gpu relative flex flex-col items-center gap-3 rounded-2xl border border-white/[0.08] bg-[#020617]/50 p-5 shadow-xl backdrop-blur-xl transition-all duration-300 group-hover:border-white/20 group-hover:bg-[#020617]/80 sm:p-6">
         {/* Icon */}
         <div className="relative flex h-12 w-12 items-center justify-center sm:h-14 sm:w-14">
           {tech.variant === 'lucide' ? (
