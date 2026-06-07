@@ -212,12 +212,32 @@ export function Hero() {
             </span>
           </div>
 
-          {/* Description */}
-          <p className="mt-6 max-w-xl px-1 text-base font-light leading-relaxed text-slate-400 sm:mt-8 sm:text-lg">
-            I build fast, scalable, and premium web applications using{' '}
-            <span className="font-medium text-white">React, Framer Motion, and GSAP</span>{' '}
-            — where performance meets cinematic polish.
-          </p>
+          {/* Animated Description */}
+          <motion.p 
+            className="mt-6 max-w-xl px-1 text-base font-light leading-relaxed text-slate-400 sm:mt-8 sm:text-lg"
+            initial={reduceMotion ? false : "hidden"}
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.04, delayChildren: 0.8 }
+              }
+            }}
+          >
+            {"Welcome to my interactive portfolio. I build fast, scalable, and premium web applications using React, Framer Motion, and GSAP — where performance meets cinematic polish.".split(' ').map((word, i) => (
+              <motion.span
+                key={i}
+                className={`inline-block mr-1.5 ${['React,', 'Framer', 'Motion,', 'GSAP'].includes(word) ? 'font-medium text-white' : ''}`}
+                variants={{
+                  hidden: { opacity: 0, y: 10, filter: 'blur(4px)' },
+                  visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { type: 'spring', damping: 20, stiffness: 200 } }
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </motion.p>
 
           {/* CTA buttons */}
           <div className="mt-10 flex w-full max-w-md flex-col items-stretch gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:items-center lg:justify-start sm:justify-center sm:gap-4">
@@ -355,52 +375,54 @@ export function Hero() {
               )}
             </div>
 
-            {isPlaying && (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="absolute top-full mt-4 sm:top-auto sm:-bottom-4 left-0 right-0 sm:left-4 sm:right-4 z-50 rounded-2xl border border-white/10 bg-slate-950/95 p-4 sm:p-6 backdrop-blur-xl shadow-2xl"
-              >
-                <div className="flex flex-wrap gap-x-1.5 gap-y-1">
-                  {INTRO_WORDS.map((word, i) => {
-                    // Calculate how many words should be visible based on audio progress
-                    const progress = duration > 0 ? currentTime / duration : 0;
-                    const visibleWordsCount = Math.ceil(progress * INTRO_WORDS.length);
-                    const isVisible = i < visibleWordsCount;
-                    const isActive = i === visibleWordsCount - 1; // The exact word currently being spoken
-                    
-                    return (
-                      <motion.span
-                        key={i}
-                        animate={{ 
-                          opacity: isVisible ? 1 : 0.2, 
-                          y: isActive ? -4 : (isVisible ? 0 : 2),
-                          scale: isActive ? 1.15 : 1,
-                          filter: isVisible ? 'blur(0px)' : 'blur(2px)',
-                          color: isActive ? '#38bdf8' : (isVisible ? '#ffffff' : '#475569') // Sky blue for active, white for past
-                        }}
-                        transition={{ 
-                          duration: isActive ? 0.15 : 0.25,
-                          type: isActive ? "spring" : "tween",
-                          stiffness: 400,
-                          damping: 15
-                        }}
-                        className="inline-block text-sm sm:text-base font-medium shadow-sky-400/50"
-                        style={{ originX: 0.5, originY: 1, textShadow: isActive ? '0 0 10px rgba(56,189,248,0.6)' : 'none' }}
-                      >
-                        {word}
-                      </motion.span>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            )}
+
           </motion.div>
 
         </div>
 
       </motion.div>
+
+      {/* Floating Animated Subtitles - Fixed to Viewport */}
+      {isPlaying && (
+        <motion.div 
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 30, scale: 0.95 }}
+          className="fixed bottom-4 left-4 right-4 sm:bottom-8 z-[9999] mx-auto max-w-3xl rounded-2xl border border-white/10 bg-slate-950/95 p-4 sm:p-6 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(56,189,248,0.15)]"
+        >
+          <div className="flex flex-wrap gap-x-1.5 gap-y-1">
+            {INTRO_WORDS.map((word, i) => {
+              const progress = duration > 0 ? currentTime / duration : 0;
+              const visibleWordsCount = Math.ceil(progress * INTRO_WORDS.length);
+              const isVisible = i < visibleWordsCount;
+              const isActive = i === visibleWordsCount - 1;
+              
+              return (
+                <motion.span
+                  key={i}
+                  animate={{ 
+                    opacity: isVisible ? 1 : 0.2, 
+                    y: isActive ? -4 : (isVisible ? 0 : 2),
+                    scale: isActive ? 1.15 : 1,
+                    filter: isVisible ? 'blur(0px)' : 'blur(2px)',
+                    color: isActive ? '#38bdf8' : (isVisible ? '#ffffff' : '#475569')
+                  }}
+                  transition={{ 
+                    duration: isActive ? 0.15 : 0.25,
+                    type: isActive ? "spring" : "tween",
+                    stiffness: 400,
+                    damping: 15
+                  }}
+                  className="inline-block text-[15px] sm:text-base font-medium shadow-sky-400/50 leading-relaxed"
+                  style={{ originX: 0.5, originY: 1, textShadow: isActive ? '0 0 10px rgba(56,189,248,0.6)' : 'none' }}
+                >
+                  {word}
+                </motion.span>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
 
       {/* Scroll indicator */}
       <motion.div
